@@ -8,6 +8,8 @@ provider:
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
     AWESOME_VAR: gwapo_ni_mamer
+    SECRET_VAR: ${file(./serverless.env.yml):${opt:stage}.SECRET_VAR}
+
   iamRoleStatements:
     - Effect: Allow
       Action:
