@@ -7,6 +7,7 @@ provider:
   runtime: nodejs4.3
   environment:
     DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+    AWESOME_VAR: gwapo_ni_mamer
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -19,6 +20,9 @@ provider:
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 functions:
+  hello:
+    handler: handler.hello
+
   create:
     handler: todos/create.create
     events:
