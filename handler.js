@@ -15,7 +15,7 @@ module.exports.hello = (event, context, callback) => {
 
 /**
  * @description http methods
- * @todo make this work for single file referencing
+ * @todo make this work for single file referencing (may add overhead though)
  */
 module.exports.todos_http = {
     post    : require('./todos/src/create'),
