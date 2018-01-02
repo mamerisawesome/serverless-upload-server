@@ -6,6 +6,8 @@
   "license": "MIT",
   "dependencies": {
     "aws-sdk": "^2.172.0",
+    "mysql2": "^1.5.1",
+    "sequelize": "^4.28.6",
     "uuid": "^2.0.3"
   }
 }

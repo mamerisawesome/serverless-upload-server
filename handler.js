@@ -18,9 +18,9 @@ module.exports.hello = (event, context, callback) => {
  * @todo make this work for single file referencing
  */
 module.exports.todos_http = {
-    post    : require('./todos/create'),
-    del     : require('./todos/delete'),
-    get     : require('./todos/get'),
-    get_all : require('./todos/list'),
-    put     : require('./todos/update'),
+    post    : require('./todos/src/create'),
+    del     : require('./todos/src/delete'),
+    get     : require('./todos/src/get'),
+    get_all : require('./todos/src/list'),
+    put     : require('./todos/src/update'),
 }
