@@ -32,7 +32,7 @@ module.exports.create = (event, context, callback) => {
   };
 
   // write the todo to the database
-  Todo.sync({force: true}).then(() => {
+  Todo.sync({force: false}).then(() => {
     return Todo.create(params.Item)
   }).then(todo => {
     callback(null, {status: response.statusCode, todo});
