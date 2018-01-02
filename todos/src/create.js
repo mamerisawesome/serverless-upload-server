@@ -3,10 +3,10 @@
 const uuid = require('uuid');
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-const Todo = require('./../db/models/todo');
+const DB = require('./../db/models');
+const Todo = DB.Todo;
 
 module.exports.create = (event, context, callback) => {
-  const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
   if (typeof data.text !== 'string') {
     console.error('Validation Failed');
@@ -21,16 +21,21 @@ module.exports.create = (event, context, callback) => {
   const params = {
     TableName: process.env.TABLE_NAME,
     Item: {
-      id: uuid.v1(),
       text: data.text,
-      checked: false,
-      createdAt: timestamp,
-      updatedAt: timestamp,
+      checked: false
     },
+  };
+
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify(params.Item),
   };
 
   // write the todo to the database
   Todo.sync({force: true}).then(() => {
-    callback(null, Todo.create(params.Item));
+    return Todo.create(params.Item)
+  }).then(todo => {
+    callback(null, {status: response.statusCode, todo});
+    process.exit(0);
   });
 };
