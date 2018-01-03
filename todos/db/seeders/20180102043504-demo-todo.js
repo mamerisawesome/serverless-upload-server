@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -10,7 +10,7 @@ module.exports = {
       return queryInterface.bulkInsert('Person', [{
         name: 'John Doe',
         isBetaMember: false
-      }], {});
+      }], {})
     */
     return queryInterface.bulkInsert('Todos', [{
       text: 'This is the first todo.',
@@ -18,10 +18,10 @@ module.exports = {
     },{
       text: 'I had an amazing dream but I forgot about it.',
       checked: false
-    }], {});
+    }], {})
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Todos', null, {});
+    return queryInterface.bulkDelete('Todos', null, {})
   }
-};
+}

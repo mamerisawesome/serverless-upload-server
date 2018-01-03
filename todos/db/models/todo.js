@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 module.exports = (sequelize, DataTypes) => {
   var Todo = sequelize.define('Todo', {
     text: DataTypes.STRING,
@@ -9,6 +9,6 @@ module.exports = (sequelize, DataTypes) => {
         // associations can be defined here
       }
     }
-  });
-  return Todo;
-};
+  })
+  return Todo
+}
