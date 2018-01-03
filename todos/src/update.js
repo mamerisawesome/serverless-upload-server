@@ -23,19 +23,7 @@ module.exports.update = (event, context, callback) => {
 
   const params = {
     TableName: process.env.TABLE_NAME,
-    Key: {
-      id: event.pathParameters.id,
-    },
-    ExpressionAttributeNames: {
-      '#todo_text': 'text',
-    },
-    ExpressionAttributeValues: {
-      ':text': data.text,
-      ':checked': data.checked,
-      ':updatedAt': timestamp,
-    },
-    UpdateExpression: 'SET #todo_text = :text, checked = :checked, updatedAt = :updatedAt',
-    ReturnValues: 'ALL_NEW',
+    Key: {id: event.pathParameters.id}
   };
 
   Todo.update(data, {
