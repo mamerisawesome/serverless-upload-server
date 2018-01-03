@@ -8,6 +8,7 @@ const Todo = DB.Todo;
 
 module.exports.create = (event, context, callback) => {
   const data = JSON.parse(event.body);
+
   if (typeof data.text !== 'string') {
     console.error('Validation Failed');
     callback(null, {

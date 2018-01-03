@@ -2,7 +2,8 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const DB = require('./../db/models');
+const Todo = DB.Todo;
 
 module.exports.get = (event, context, callback) => {
   const params = {
@@ -12,24 +13,21 @@ module.exports.get = (event, context, callback) => {
     },
   };
 
-  // fetch todo from the database
-  dynamoDb.get(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo item.',
-      });
-      return;
-    }
-
-    // create a response
+  Todo.findById(params.Key.id).then(todo => {
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Item),
+      body: JSON.stringify(todo),
     };
+
     callback(null, response);
+    process.exit(0);
+  }).catch(err => {
+    console.error(err);
+    callback(null, {
+      statusCode: err.statusCode || 501,
+      headers: { 'Content-Type': 'text/plain' },
+      body: 'Couldn\'t fetch the todo item.',
+    });
+    return;
   });
 };

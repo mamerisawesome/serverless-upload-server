@@ -2,13 +2,15 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const DB = require('./../db/models');
+const Todo = DB.Todo;
 
 module.exports.update = (event, context, callback) => {
   const timestamp = new Date().getTime();
   const data = JSON.parse(event.body);
 
-  // validation
+  data.updatedAt = timestamp;
+
   if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
     console.error('Validation Failed');
     callback(null, {
@@ -36,24 +38,17 @@ module.exports.update = (event, context, callback) => {
     ReturnValues: 'ALL_NEW',
   };
 
-  // update the todo in the database
-  dynamoDb.update(params, (error, result) => {
-    // handle potential errors
-    if (error) {
-      console.error(error);
-      callback(null, {
-        statusCode: error.statusCode || 501,
-        headers: { 'Content-Type': 'text/plain' },
-        body: 'Couldn\'t fetch the todo item.',
-      });
-      return;
+  Todo.update(data, {
+    where: {
+      _id: params.Key.id
     }
-
-    // create a response
+  }).then(result => {
     const response = {
       statusCode: 200,
-      body: JSON.stringify(result.Attributes),
+      body: JSON.stringify(result),
     };
+
     callback(null, response);
+    process.exit(0);
   });
 };
