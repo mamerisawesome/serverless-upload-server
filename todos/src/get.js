@@ -6,14 +6,9 @@ const DB = require('./../db/models');
 const Todo = DB.Todo;
 
 module.exports.get = (event, context, callback) => {
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    Key: {
-      id: event.pathParameters.id,
-    },
-  };
+  const data = JSON.parse(event.body);
 
-  Todo.findById(params.Key.id).then(todo => {
+  Todo.find({where: data}).then(todo => {
     const response = {
       statusCode: 200,
       body: JSON.stringify(todo),
