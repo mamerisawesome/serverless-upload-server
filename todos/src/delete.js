@@ -7,7 +7,7 @@ const Todo = DB.Todo;
 
 module.exports.delete = (event, context, callback) => {
   const params = {
-    TableName: process.env.DYNAMODB_TABLE,
+    TableName: process.env.TABLE_NAME,
     Key: {
       id: event.pathParameters.id,
     },
