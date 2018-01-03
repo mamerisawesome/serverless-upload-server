@@ -2,7 +2,9 @@
 
 const AWS = require('aws-sdk'); // eslint-disable-line import/no-extraneous-dependencies
 
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+const DB = require('./../db/models');
+const Todo = DB.Todo;
+
 const params = {
   TableName: process.env.TABLE_NAME,
 };
