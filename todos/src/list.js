@@ -25,6 +25,6 @@ module.exports.list = (event, context, callback) => {
       headers: { 'Content-Type': 'text/plain' },
       body: 'Couldn\'t fetch the todo item.',
     })
-    return
+    process.exit(1)
   })
 }
