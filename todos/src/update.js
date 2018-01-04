@@ -11,25 +11,8 @@ module.exports.update = (event, context, callback) => {
 
   data.updatedAt = timestamp
 
-  if (typeof data.text !== 'string' || typeof data.checked !== 'boolean') {
-    console.error('Validation Failed')
-    callback(null, {
-      statusCode: 400,
-      headers: { 'Content-Type': 'text/plain' },
-      body: 'Couldn\'t update the todo item.',
-    })
-    return
-  }
-
-  const params = {
-    TableName: process.env.TABLE_NAME,
-    Key: {id: event.pathParameters.id}
-  }
-
   Todo.update(data, {
-    where: {
-      _id: params.Key.id
-    }
+    where: {id: data.id}
   }).then(result => {
     const response = {
       statusCode: 200,
