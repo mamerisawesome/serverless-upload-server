@@ -4,15 +4,20 @@
   "description": "Serverless CRUD service exposing a REST HTTP interface",
   "author": "",
   "license": "MIT",
-  "scripts":{
+  "scripts": {
     "start": "sls deploy",
     "local": "sls invoke local -f hello -s dev"
   },
   "dependencies": {
     "aws-sdk": "^2.172.0",
+    "bluebird": "^3.5.1",
+    "jimp": "^0.2.28",
     "mysql2": "^1.5.1",
+    "node-zip": "^1.1.1",
     "sequelize": "^4.28.6",
     "sequelize-cli": "^3.2.0",
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-apigwy-binary": "^0.1.0",
     "uuid": "^2.0.3"
   }
 }

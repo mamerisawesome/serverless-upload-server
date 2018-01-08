@@ -1,15 +1,14 @@
-service: serverless-dynamo-todo
+service: serverless-mysql-todos-mamer
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
   runtime: nodejs4.3
   environment: ${file(./sls/env.yml):${opt:stage}}
-  profile: serverless-deploy
-  role: arn:aws:iam::{account}:role/{role-name}
-  timeout: 30
   vpc: ${file(./sls/prvdr.yml):VPC}
   iamRoleStatements: ${file(./sls/prvdr.yml):IAM}
 
 functions: ${file(./sls/fxn.yml)}
+plugins: ${file(./sls/plugins.yml)}
+custom: ${file(./sls/custom.yml)}
 resources: ${file(./sls/rsrc.yml)}

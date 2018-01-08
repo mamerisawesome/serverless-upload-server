@@ -1,8 +1,5 @@
 'use strict'
 
-/**
- * @description project init functions for testing purposes
- */
 module.exports.hello = (event, context, callback) => {
     const response = {
         foo: 'bar',
@@ -13,14 +10,9 @@ module.exports.hello = (event, context, callback) => {
     callback(null, response)
 }
 
-/**
- * @description http methods
- * @todo make this work for single file referencing (may add overhead though)
- */
-module.exports.todos_http = {
-    post    : require('./todos/src/create'),
-    del     : require('./todos/src/delete'),
-    get     : require('./todos/src/get'),
-    get_all : require('./todos/src/list'),
-    put     : require('./todos/src/update'),
-}
+const Image = require("./todos/helpers/image");
+
+module.exports.generate = (event, context, callback) => {
+    var i = new Image(Buffer.from(event.body, "base64"));
+    i.generate(callback);
+};

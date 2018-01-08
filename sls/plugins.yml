@@ -1,0 +1,3 @@
+plugins:
+  - serverless-apigw-binary
+  - serverless-apigwy-binary

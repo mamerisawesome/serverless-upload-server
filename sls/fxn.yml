@@ -40,3 +40,11 @@ delete:
         path: todos/{id}
         method: delete
         cors: true
+
+generate:
+  handler: handler.generate
+  events:
+    - http:
+        path: process
+        method: post
+        contentHandling: CONVERT_TO_BINARY
