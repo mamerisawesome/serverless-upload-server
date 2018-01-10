@@ -9,6 +9,11 @@ provider:
   iamRoleStatements: ${file(./sls/prvdr.yml):IAM}
 
 functions: ${file(./sls/fxn.yml)}
-plugins: ${file(./sls/plugins.yml)}
 custom: ${file(./sls/custom.yml)}
 resources: ${file(./sls/rsrc.yml)}
+plugins:
+  # ${file(./sls/plugins.yml)}
+  - serverless-offline
+  - serverless-apigw-binary
+  - serverless-apigwy-binary
+

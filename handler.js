@@ -14,5 +14,5 @@ const Image = require("./todos/helpers/image");
 
 module.exports.generate = (event, context, callback) => {
     var i = new Image(Buffer.from(event.body, "base64"));
-    i.generate(callback);
+    i.generate(context, callback);
 };

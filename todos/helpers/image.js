@@ -9,7 +9,7 @@ class Image {
         this.url = url
     }
 
-    pushZip (container, dimension, size) {
+    pushZip (container, image, dimension, size) {
         container.push(image.resize(dimension.x, dimension.y).getBufferAsync(Jimp.AUTO).then(data => {
             return new Bluebird((resolve, reject) => {
                 resolve({size, data})
@@ -17,17 +17,20 @@ class Image {
         }))
     }
 
-    generate (callback) {
-        Jimp.read(this.url, (error, image) => {
-            if(error) return callback(error, null)
+    generate (context, callback) {
+        console.log(this.url)
+        Jimp.read(this.url).then(image => {
+            if (!image) {
+                callback(null, {statusCode: 500, body: 'Buffer read empty'})
+                process.exit(1)
+            }
 
             let images = []
-
-            this.pushZip(images, {x: 196, y: 196}, 'xxxhdpi')
-            this.pushZip(images, {x: 144, y: 144}, 'xxhdpi')
-            this.pushZip(images, {x: 96,  y: 96},  'xhdpi')
-            this.pushZip(images, {x: 72,  y: 72},  'hdpi')
-            this.pushZip(images, {x: 48,  y: 48},  'mdpi')
+            this.pushZip(images, image, {x: 196, y: 196}, 'xxxhdpi')
+            this.pushZip(images, image, {x: 144, y: 144}, 'xxhdpi')
+            this.pushZip(images, image, {x: 96,  y: 96},  'xhdpi')
+            this.pushZip(images, image, {x: 72,  y: 72},  'hdpi')
+            this.pushZip(images, image, {x: 48,  y: 48},  'mdpi')
 
             Bluebird.all(images).then(data => {
                 for(let i = 0; i < data.length; i++) {
@@ -46,7 +49,14 @@ class Image {
                 }
 
                 callback(null, response)
+                process.exit(0)
             })
+
+            callback(null, {statusCode: 500, body: 'No processing'})
+            process.exit(1)
+        }).catch(error => {
+            return callback(error, null)
+            process.exit(1)
         })
     }
 }
