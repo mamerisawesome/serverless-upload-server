@@ -1,11 +1,7 @@
 'use strict'
 
 module.exports.hello = (event, context, callback) => {
-    const response = {
-        foo: 'bar',
-        awe: process.env.AWESOME_VAR,
-        secret: process.env.SECRET_VAR,
-    }
+    const response = {foo: 'bar'}
 
     callback(null, response)
 }
@@ -13,6 +9,9 @@ module.exports.hello = (event, context, callback) => {
 const Image = require("./todos/helpers/image");
 
 module.exports.generate = (event, context, callback) => {
-    var i = new Image(Buffer.from(event.body, "base64"));
-    i.generate(context, callback);
-};
+    if (!event || event && !event.body) return callback(null, {"statusCode": 500, "body": "No file input"})
+    else {
+        var i = Buffer.from(event.body, "base64")
+        i.generate(context, callback)
+    }
+}

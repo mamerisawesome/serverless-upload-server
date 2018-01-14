@@ -1,3 +1,5 @@
+'use strict'
+
 const Zip = new require('node-zip')()
 const Bluebird = require("bluebird")
 const Jimp = require("jimp")
@@ -18,45 +20,41 @@ class Image {
     }
 
     generate (context, callback) {
-        console.log(this.url)
         Jimp.read(this.url).then(image => {
             if (!image) {
-                callback(null, {statusCode: 500, body: 'Buffer read empty'})
-                process.exit(1)
+                return callback(null, {statusCode: 500, body: 'Buffer read empty'})
+            } else {
+                let images = []
+
+                this.pushZip(images, image, {x: 196, y: 196}, 'xxxhdpi')
+                this.pushZip(images, image, {x: 144, y: 144}, 'xxhdpi')
+                this.pushZip(images, image, {x: 96,  y: 96},  'xhdpi')
+                this.pushZip(images, image, {x: 72,  y: 72},  'hdpi')
+                this.pushZip(images, image, {x: 48,  y: 48},  'mdpi')
+
+                Bluebird.all(images).then(data => {
+                    for(let i = 0; i < data.length; i++) {
+                        Zip.file(data[i].size + "/icon.png", data[i].data)
+                    }
+
+                    let zipfile = Zip.generate({ base64: true, compression: "DEFLATE" })
+                    let response = {
+                        statusCode: 200,
+                        headers: {
+                            "Content-Type": "application/zip",
+                            "Content-Disposition": "attachment; filename=android.zip"
+                        },
+                        body: zipfile,
+                        isBase64Encoded: true
+                    }
+
+                    return callback(null, response)
+                })
+
+                return callback(null, {statusCode: 500, body: 'No processing'})
             }
-
-            let images = []
-            this.pushZip(images, image, {x: 196, y: 196}, 'xxxhdpi')
-            this.pushZip(images, image, {x: 144, y: 144}, 'xxhdpi')
-            this.pushZip(images, image, {x: 96,  y: 96},  'xhdpi')
-            this.pushZip(images, image, {x: 72,  y: 72},  'hdpi')
-            this.pushZip(images, image, {x: 48,  y: 48},  'mdpi')
-
-            Bluebird.all(images).then(data => {
-                for(let i = 0; i < data.length; i++) {
-                    Zip.file(data[i].size + "/icon.png", data[i].data)
-                }
-
-                let zipfile = Zip.generate({ base64: true, compression: "DEFLATE" })
-                let response = {
-                    statusCode: 200,
-                    headers: {
-                        "Content-Type": "application/zip",
-                        "Content-Disposition": "attachment; filename=android.zip"
-                    },
-                    body: zipfile,
-                    isBase64Encoded: true
-                }
-
-                callback(null, response)
-                process.exit(0)
-            })
-
-            callback(null, {statusCode: 500, body: 'No processing'})
-            process.exit(1)
         }).catch(error => {
             return callback(error, null)
-            process.exit(1)
         })
     }
 }
