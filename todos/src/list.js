@@ -16,15 +16,13 @@ module.exports.list = (event, context, callback) => {
       body: JSON.stringify(todos),
     }
 
-    callback(null, response)
-    process.exit(0)
+    return callback(null, response)
   }).catch(err => {
     console.error(err)
-    callback(null, {
+    return callback(null, {
       statusCode: err.statusCode || 501,
       headers: { 'Content-Type': 'text/plain' },
       body: 'Couldn\'t fetch the todo item.',
     })
-    process.exit(1)
   })
 }

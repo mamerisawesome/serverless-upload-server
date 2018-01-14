@@ -19,7 +19,6 @@ module.exports.update = (event, context, callback) => {
       body: JSON.stringify(result),
     }
 
-    callback(null, response)
-    process.exit(0)
+    return callback(null, response)
   })
 }

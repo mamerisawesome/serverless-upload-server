@@ -36,7 +36,6 @@ module.exports.create = (event, context, callback) => {
   Todo.sync({force: false}).then(() => {
     return Todo.create(params.Item)
   }).then(todo => {
-    callback(null, {status: response.statusCode, todo})
-    process.exit(0)
+    return callback(null, {status: response.statusCode, todo})
   })
 }
