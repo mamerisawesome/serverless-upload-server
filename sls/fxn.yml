@@ -1,5 +1,10 @@
 hello:
   handler: handler.hello
+  events:
+    - http:
+        path: hello
+        method: get
+        cors: true
 
 create:
   handler: todos/src/create.create
@@ -48,3 +53,4 @@ generate:
         path: process
         method: post
         contentHandling: CONVERT_TO_BINARY
+        cors: true
