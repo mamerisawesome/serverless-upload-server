@@ -20,7 +20,9 @@ class Image {
     }
 
     generate (context, callback) {
+        console.log(this.url)
         Jimp.read(this.url).then(image => {
+            console.log(image)
             if (!image) {
                 return callback(null, {statusCode: 500, body: 'Buffer read empty'})
             } else {
