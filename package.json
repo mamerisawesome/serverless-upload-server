@@ -17,13 +17,11 @@
     "node-zip": "^1.1.1",
     "package.json": "^2.0.1",
     "sequelize": "^4.28.6",
-    "sequelize-cli": "^3.2.0",
+    "serverless": "^1.25.0",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-apigwy-binary": "^0.1.0",
     "serverless-offline": "^3.16.0",
-    "serverless-package-plugin": "^1.0.2",
     "serverless-plugin-bespoken": "^0.0.9",
-    "serverless-serve": "^1.7.2",
     "uuid": "^2.0.3"
   },
   "devDependencies": {

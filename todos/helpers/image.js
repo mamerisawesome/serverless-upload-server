@@ -23,9 +23,8 @@ class Image {
         console.log(this.url)
         Jimp.read(this.url).then(image => {
             console.log(image)
-            if (!image) {
-                return callback(null, {statusCode: 500, body: 'Buffer read empty'})
-            } else {
+            if (!image) return callback(null, {statusCode: 500, body: 'Buffer read empty'})
+            else {
                 let images = []
 
                 this.pushZip(images, image, {x: 196, y: 196}, 'xxxhdpi')

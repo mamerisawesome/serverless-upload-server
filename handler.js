@@ -17,8 +17,7 @@ module.exports.generate = (event, context, callback) => {
         "body": "No file input"
     })
     else {
-        console.log(event)
-        let i = new Image(new Buffer(event.body, "base64"))
+        let i = new Image(Buffer.from(event.body, "base64"))
         i.generate(context, callback)
     }
 }
