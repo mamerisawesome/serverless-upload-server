@@ -1,88 +1,102 @@
-service: serverless-mysql-todos-mamer
+service: serverless-upload-mamer
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
   name: aws
-  runtime: nodejs6.10
-  environment:
-    dev:
-      MYSQL_DB: 'sls_todos_mysql'
-      TABLE_NAME: 'Todos'
-      SLS_DEBUG: true
-      SECRET_VAR: 'secret in dev'
-      AWESOME_VAR: 'gwapo ni mamer'
+  runtime: nodejs4.3
+  region: ap-southeast-1
+  stage: dev
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "*"
+      Resource: "*"
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
-          cors: true
+  # generate:
+  #   handler: handler.generate
+  #   events:
+  #     - http:
+  #         path: process
+  #         method: post
+  #         contentHandling: CONVERT_TO_BINARY
+  #         cors: true
 
-  create:
-    handler: todos/src/create.create
+  sendImageToS3:
+    handler: handler.sendImageToS3
+    events:
+      - s3: smartspark
+
+  getUploadURL:
+    handler: handler.getUploadURL
     events:
       - http:
-          path: todos
+          path: getUploadURL
           method: post
           cors: true
 
-  list:
-    handler: todos/src/list.list
+  testURL:
+    handler: handler.testURL
     events:
       - http:
-          path: todos
+          path: testURL
           method: get
           cors: true
 
-  get:
-    handler: todos/src/get.get
-    events:
-      - http:
-          path: todos/{id}
-          method: get
-          cors: true
+resources:
+  Resources:
+    S3BucketSmartspark:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: sls-smartspark
 
-  update:
-    handler: todos/src/update.update
-    events:
-      - http:
-          path: todos/{id}
-          method: put
-          cors: true
+# resources:
+#   Resources:
+#     S3BucketSmartspark:
+#       Type: AWS::S3::Bucket
+#       Properties:
+#         BucketName: smartspark
+#     SendImageToS3LambdaPermissionSmartsparkS3:
+#       Type: "AWS::Lambda::Permission"
+#       Properties:
+#         FunctionName:
+#           "Fn::GetAtt":
+#             - SendImageToS3LambdaFunction
+#             - Arn
+#         Principal: "s3.amazonaws.com"
+#         Action: "lambda:InvokeFunction"
+#         SourceAccount:
+#           Ref: AWS::AccountId
+#         SourceArn: "arn:aws:s3:::smartspark"
 
-  delete:
-    handler: todos/src/delete.delete
-    events:
-      - http:
-          path: todos/{id}
-          method: delete
-          cors: true
-
-  generate:
-    handler: handler.generate
-    events:
-      - http:
-          path: process
-          method: post
-          contentHandling: CONVERT_TO_BINARY
-          cors: true
+# resources:
+#   Resources:
+#     UploadBucket:
+#       Type: AWS::S3::Bucket
+#       Properties:
+#         BucketName: smartspark
+#         AccessControl: PublicRead
+#         CorsConfiguration:
+#           CorsRules:
+#           - AllowedMethods:
+#             - GET
+#             - PUT
+#             - POST
+#             - HEAD
+#             AllowedOrigins:
+#             - "*"
+#             AllowedHeaders:
+#             - "*"
 
 custom:
-  custom:
-    apigwBinary:
-      types:
-        - 'application/octet-stream'
-        - 'application/zip'
-        - 'application/json'
-        - 'image/png'
-        - 'image/jpeg'
+  optimize:
+    minify: true
+    presets: ["env"]
+  bucket:
+    - smartspark
 
 plugins:
-  - serverless-apigw-binary
-  - serverless-apigwy-binary
-  - serverless-plugin-bespoken
+  - serverless-plugin-optimize
+  # - serverless-plugin-bespoken
   # - serverless-package-plugin
   # - serverless-offline
