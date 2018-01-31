@@ -22,16 +22,11 @@ functions:
   #         contentHandling: CONVERT_TO_BINARY
   #         cors: true
 
-  sendImageToS3:
-    handler: handler.sendImageToS3
-    events:
-      - s3: smartspark
-
-  getUploadURL:
-    handler: handler.getUploadURL
+  requestUploadUrl:
+    handler: handler.requestUploadUrl
     events:
       - http:
-          path: getUploadURL
+          path: requestUploadUrl
           method: post
           cors: true
 
@@ -42,13 +37,6 @@ functions:
           path: testURL
           method: get
           cors: true
-
-resources:
-  Resources:
-    S3BucketSmartspark:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: sls-smartspark
 
 # resources:
 #   Resources:
