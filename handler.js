@@ -14,6 +14,11 @@ module.exports.requestUploadUrl = (event, context, callback) => {
             body: JSON.stringify({ "message": "Missing file" })
         })
     } else {
+        AWS.config.update({
+            accessKeyId: 'AKIAI7EDAL75O5WULYLA',
+            secretAccessKey: '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'
+        });
+
         let s3 = new AWS.S3()
         let params = parser.parseResponse(event.body)
         let headers = params.headers['Content-Disposition']
@@ -22,7 +27,7 @@ module.exports.requestUploadUrl = (event, context, callback) => {
 
         let s3Params = {
             Bucket: 'smartspark',
-            Key:  'files/' + filename,
+            Key:  'uploads/' + filename,
             ContentType: content_type,
             ACL: 'public-read',
         }
