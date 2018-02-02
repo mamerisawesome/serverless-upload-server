@@ -1,7 +1,0 @@
-custom:
-  apigwBinary:
-    types:
-      - 'application/octet-stream'
-      - 'application/zip'
-      - 'image/png'
-      - 'image/jpeg'

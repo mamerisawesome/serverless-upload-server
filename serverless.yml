@@ -1,4 +1,4 @@
-service: serverless-upload-mamer
+service: sp-aws-direct-to-s3
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 provider:
@@ -13,15 +13,6 @@ provider:
       Resource: "*"
 
 functions:
-  # generate:
-  #   handler: handler.generate
-  #   events:
-  #     - http:
-  #         path: process
-  #         method: post
-  #         contentHandling: CONVERT_TO_BINARY
-  #         cors: true
-
   requestUploadUrl:
     handler: handler.requestUploadUrl
     events:
@@ -30,61 +21,37 @@ functions:
           method: post
           cors: true
 
-  testURL:
-    handler: handler.testURL
-    events:
-      - http:
-          path: testURL
-          method: get
-          cors: true
+  afterSend:
+    handler: handler.afterSend
 
-# resources:
-#   Resources:
-#     S3BucketSmartspark:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: smartspark
-#     SendImageToS3LambdaPermissionSmartsparkS3:
-#       Type: "AWS::Lambda::Permission"
-#       Properties:
-#         FunctionName:
-#           "Fn::GetAtt":
-#             - SendImageToS3LambdaFunction
-#             - Arn
-#         Principal: "s3.amazonaws.com"
-#         Action: "lambda:InvokeFunction"
-#         SourceAccount:
-#           Ref: AWS::AccountId
-#         SourceArn: "arn:aws:s3:::smartspark"
-
-# resources:
-#   Resources:
-#     UploadBucket:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: smartspark
-#         AccessControl: PublicRead
-#         CorsConfiguration:
-#           CorsRules:
-#           - AllowedMethods:
-#             - GET
-#             - PUT
-#             - POST
-#             - HEAD
-#             AllowedOrigins:
-#             - "*"
-#             AllowedHeaders:
-#             - "*"
+resources:
+  Resources:
+    S3BucketAfterSend:
+      Type: AWS::S3::Bucket
+      DependsOn:
+        - AfterSendLambdaPermissionS3BucketS3
+      Properties:
+        BucketName: { 'Fn::Join' : ['-', ['smartspark', { 'Ref' : 'AWS::AccountId' } ] ]  }
+        NotificationConfiguration:
+          LambdaConfigurations:
+            - Event: 's3:ObjectCreated:*'
+              Function:
+                'Fn::GetAtt': [ AfterSendLambdaFunction, Arn ]
+    AfterSendLambdaPermissionS3BucketS3:
+      DependsOn:
+        - AfterSendLambdaFunction
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          'Fn::GetAtt': [ AfterSendLambdaFunction, Arn ]
+        Action: 'lambda:InvokeFunction'
+        Principal: 's3.amazonaws.com'
+        SourceArn: { 'Fn::Join' : ['-', [ 'arn:aws:s3:::smartspark', { 'Ref' : 'AWS::AccountId' } ] ]  }
 
 custom:
   optimize:
     minify: true
     presets: ["env"]
-  bucket:
-    - smartspark
 
 plugins:
   - serverless-plugin-optimize
-  # - serverless-plugin-bespoken
-  # - serverless-package-plugin
-  # - serverless-offline
