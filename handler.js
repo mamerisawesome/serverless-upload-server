@@ -14,25 +14,25 @@ module.exports.requestUploadUrl = (event, context, callback) => {
             body: JSON.stringify({ "message": "Missing file" })
         })
     } else {
-        AWS.config.update({
-            accessKeyId: 'AKIAI7EDAL75O5WULYLA',
-            secretAccessKey: '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'
-        });
+        const S3 = new AWS.S3({
+            s3ForcePathStyle: true,
+            endpoint: new AWS.Endpoint('http://localhost:3030'),
+        })
 
-        let s3 = new AWS.S3()
         let params = parser.parseResponse(event.body)
         let headers = params.headers['Content-Disposition']
-        let filename = headers.split("filename=\"")[headers.split("filename=\"").length-1].split("\"")[0]
-        let content_type = 'image/' + filename.split('.')[filename.split('.').length-1]
+        let filename = JSON.parse(event.body).name
+        let content_type = JSON.parse(event.body).type
 
+        console.log(event.body)
         let s3Params = {
-            Bucket: 'smartspark',
+            Bucket: 'local-bucket',
             Key:  'uploads/' + filename,
             ContentType: content_type,
             ACL: 'public-read',
         }
 
-        let uploadURL = s3.getSignedUrl('putObject', s3Params)
+        let uploadURL = S3.getSignedUrl('putObject', s3Params)
         callback(null, {
             statusCode: 200,
             headers: {

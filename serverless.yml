@@ -26,32 +26,24 @@ functions:
 
 resources:
   Resources:
-    S3BucketAfterSend:
+    NewResource:
       Type: AWS::S3::Bucket
-      DependsOn:
-        - AfterSendLambdaPermissionS3BucketS3
       Properties:
-        BucketName: { 'Fn::Join' : ['-', ['smartspark', { 'Ref' : 'AWS::AccountId' } ] ]  }
-        NotificationConfiguration:
-          LambdaConfigurations:
-            - Event: 's3:ObjectCreated:*'
-              Function:
-                'Fn::GetAtt': [ AfterSendLambdaFunction, Arn ]
-    AfterSendLambdaPermissionS3BucketS3:
-      DependsOn:
-        - AfterSendLambdaFunction
-      Type: AWS::Lambda::Permission
-      Properties:
-        FunctionName:
-          'Fn::GetAtt': [ AfterSendLambdaFunction, Arn ]
-        Action: 'lambda:InvokeFunction'
-        Principal: 's3.amazonaws.com'
-        SourceArn: { 'Fn::Join' : ['-', [ 'arn:aws:s3:::smartspark', { 'Ref' : 'AWS::AccountId' } ] ]  }
+        BucketName: local-bucket
 
 custom:
   optimize:
     minify: true
     presets: ["env"]
+  s3:
+    host: 0.0.0.0
+    port: 3030
+    directory: /tmp
+    cors: true
+    # Uncomment only if you already have a S3 server running locally
+    noStart: true
 
 plugins:
   - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-s3-local

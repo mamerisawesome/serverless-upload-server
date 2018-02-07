@@ -17,7 +17,9 @@
     "node-zip": "^1.1.1",
     "package.json": "^2.0.1",
     "serverless": "^1.25.0",
+    "serverless-offline": "^3.16.0",
     "serverless-plugin-optimize": "^3.0.4-rc.1",
+    "serverless-s3-local": "^0.2.10",
     "uuid": "^2.0.3"
   }
 }
